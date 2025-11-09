@@ -52,7 +52,7 @@ def get_random_song():
     name = track["name"]
     artists = ", ".join(a["name"] for a in track["artists"])
     url = track["external_urls"]["spotify"]
-    return f"🎵 [**{name}**]({url}) by *{artists}*"
+    return f"[🎵 **{name}**]({url}) - *{artists}*"
 
 
 @tasks.loop(time=datetime.time(hour=16, tzinfo=pytz.timezone("Europe/Helsinki")))
@@ -69,7 +69,6 @@ async def on_ready():
     await bot.tree.sync()
     if not daily_song.is_running():
         daily_song.start()
-    print(f"Logged in as {bot.user}")
 
 
 def is_admin_or_owner_user():
@@ -97,7 +96,7 @@ async def test_song(interaction: discord.Interaction):
         try:
             song_msg = get_random_song()
             await interaction.followup.send(
-                f"Tämän päivän huippubiisi on: {song_msg} \n-# Biisit haetaan Perjantai-illan [Spotify-listalta](<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
+                f"Tämän päivän huippubiisi on {song_msg} \n-# Biisit haetaan Perjantai-illan [Spotify-listalta](<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
             )
         except Exception as e:
             await interaction.response.send_message(f"Error: {e}", ephemeral=True)
