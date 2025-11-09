@@ -52,7 +52,7 @@ def get_random_song():
     name = track["name"]
     artists = ", ".join(a["name"] for a in track["artists"])
     url = track["external_urls"]["spotify"]
-    return f"🎵 **[{name}]({url})** by *{artists}*\n"
+    return f"🎵 [**{name}**]({url}) by *{artists}*"
 
 
 @tasks.loop(time=datetime.time(hour=16, tzinfo=pytz.timezone("Europe/Helsinki")))
@@ -72,11 +72,24 @@ async def on_ready():
     print(f"Logged in as {bot.user}")
 
 
+def is_admin_or_owner_user():
+    # tmp permission checker
+    async def predicate(interaction: discord.Interaction) -> bool:
+        user = interaction.user
+        if isinstance(user, discord.Member) and user.guild_permissions.administrator:
+            return True
+        if user.id == 197033067255169025:
+            return True
+        return False
+
+    return app_commands.check(predicate)
+
+
 @bot.tree.command(
     name="spotifybiisi",
     description="Send a random song immediately from the playlist",
 )
-@app_commands.checks.has_permissions(administrator=True)
+@is_admin_or_owner_user()
 async def test_song(interaction: discord.Interaction):
     await interaction.response.defer(ephemeral=False)
     channel = bot.get_channel(CHANNEL_ID)
@@ -84,7 +97,7 @@ async def test_song(interaction: discord.Interaction):
         try:
             song_msg = get_random_song()
             await interaction.followup.send(
-                f"Tämän päivän huippubiisi on: \n{song_msg}"
+                f"Tämän päivän huippubiisi on: {song_msg} \n-# Biisit haetaan Perjantai-illan [Spotify-listalta](<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
             )
         except Exception as e:
             await interaction.response.send_message(f"Error: {e}", ephemeral=True)
