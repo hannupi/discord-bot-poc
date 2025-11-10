@@ -1,0 +1,36 @@
+name: Deploy on Pi
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: master
+          clean: true
+
+      - name: create .env
+        run: |
+          echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" > $GITHUB_WORKSPACE/.env
+          echo "DISCORD_CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }}" >> $GITHUB_WORKSPACE/.env
+          echo "SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}" >> $GITHUB_WORKSPACE/.env
+          echo "SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}" >> $GITHUB_WORKSPACE/.env
+          echo "SPOTIFY_PLAYLIST_ID=${{ secrets.SPOTIFY_PLAYLIST_ID }}" >> $GITHUB_WORKSPACE/.env
+
+      - name: Build & run container
+        run: |
+          if [ -n "$(docker compose -f docker-compose.yml ps -q)" ]; then
+            # Only run down if container exists
+            docker compose -f docker-compose.yml down
+          fi
+
+          docker compose -f docker-compose.yml up -d --build
+
+
