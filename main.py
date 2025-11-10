@@ -10,6 +10,12 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 load_dotenv()
 
+SONG_TEMPLATE = (
+    "Tämän päivän huippubiisi on {song} \n"
+    "-# Biisit haetaan Perjantai-illan [Spotify-listalta]"
+    "(<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
+)
+
 
 def require_env(name):
     val = os.getenv(name)
@@ -60,7 +66,7 @@ async def daily_song():
     channel = bot.get_channel(CHANNEL_ID)
     if channel and isinstance(channel, TextChannel):
         song_msg = get_random_song()
-        await channel.send(song_msg)
+        await channel.send(SONG_TEMPLATE.format(song=song_msg))
 
 
 @bot.event
@@ -94,9 +100,7 @@ async def test_song(interaction: discord.Interaction):
     if isinstance(channel, TextChannel):
         try:
             song_msg = get_random_song()
-            await interaction.followup.send(
-                f"Tämän päivän huippubiisi on {song_msg} \n-# Biisit haetaan Perjantai-illan [Spotify-listalta](<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
-            )
+            await interaction.followup.send(SONG_TEMPLATE.format(song=song_msg))
         except Exception as e:
             await interaction.response.send_message(f"Error: {e}", ephemeral=True)
     else:
