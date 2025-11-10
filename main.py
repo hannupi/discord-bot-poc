@@ -1,13 +1,12 @@
 import os
 import random
-import datetime
+from datetime import timezone, timedelta, time
 import discord
 from discord.ext import tasks, commands
 from discord import TextChannel, app_commands
 from dotenv import load_dotenv
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
-import pytz
 
 load_dotenv()
 
@@ -55,7 +54,7 @@ def get_random_song():
     return f"[🎵 **{name}**]({url}) - *{artists}*"
 
 
-@tasks.loop(time=datetime.time(hour=16, tzinfo=pytz.timezone("Europe/Helsinki")))
+@tasks.loop(time=time(hour=17, tzinfo=timezone(timedelta(hours=3))))
 async def daily_song():
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL_ID)
