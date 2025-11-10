@@ -66,7 +66,9 @@ async def daily_song():
     channel = bot.get_channel(CHANNEL_ID)
     if channel and isinstance(channel, TextChannel):
         song_msg = get_random_song()
-        await channel.send(SONG_TEMPLATE.format(song=song_msg))
+        msg = await channel.send(SONG_TEMPLATE.format(song=song_msg))
+        for emoji in ("👍", "👎"):
+            await msg.add_reaction(emoji)
 
 
 @bot.event
@@ -100,7 +102,11 @@ async def test_song(interaction: discord.Interaction):
     if isinstance(channel, TextChannel):
         try:
             song_msg = get_random_song()
-            await interaction.followup.send(SONG_TEMPLATE.format(song=song_msg))
+            msg = await interaction.followup.send(
+                SONG_TEMPLATE.format(song=song_msg), wait=True
+            )
+            for emoji in ("👍", "👎"):
+                await msg.add_reaction(emoji)
         except Exception as e:
             await interaction.response.send_message(f"Error: {e}", ephemeral=True)
     else:
