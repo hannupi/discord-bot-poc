@@ -57,7 +57,7 @@ def get_random_song():
     name = track["name"]
     artists = ", ".join(a["name"] for a in track["artists"])
     url = track["external_urls"]["spotify"]
-    return f"[🎵 **{name}**]({url}) - *{artists}*"
+    return f"[**{name}**]({url}) artistilta {artists}"
 
 
 @tasks.loop(time=time(hour=17, tzinfo=timezone(timedelta(hours=3))))
