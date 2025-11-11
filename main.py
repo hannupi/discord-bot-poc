@@ -13,7 +13,7 @@ load_dotenv()
 SONG_TEMPLATE = (
     "Tämän päivän huippubiisi on {song} \n"
     "-# Biisit haetaan Perjantai-illan [Spotify-listalta]"
-    "(<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci?si=d05c3e7cc79b47d4>)"
+    "(<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci>)"
 )
 
 
