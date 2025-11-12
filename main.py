@@ -11,7 +11,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 load_dotenv()
 
 SONG_TEMPLATE = (
-    "Tämän päivän huippubiisi on {song} \n"
+    "Tämän päivän äänestysbiisi on {song} \n"
     "-# Biisit haetaan Perjantai-illan [Spotify-listalta]"
     "(<https://open.spotify.com/playlist/6QSn6IOxMqCyZC2gqLoFci>)"
 )
